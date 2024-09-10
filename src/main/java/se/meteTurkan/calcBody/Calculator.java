@@ -39,7 +39,7 @@ class InputCurrency {
         boolean key = true; // Key to check if user satisfied with input
         do {
             // Base currency type
-            System.out.print("Please input the base currency\t:");
+            System.out.print("\nPlease input the base currency\t:");
             curBase = myScanner.nextLine().toUpperCase();; // User inputSystem.out.print("Please input the base currency\t:");
 
             // Base currency quantity
@@ -80,47 +80,70 @@ public class Calculator {
 
         InputCurrency inputObj = new InputCurrency(); // Creating object of InputCurrency class
 
-        inputObj.userInputs(); // Captures user-selected currencies for comparison
-
         double conversionRate = 0.0; // Initializing ratio variable between 2 currencies as default set to 0
 
-        // Scratching currencies data
-        try {
-            // Adjusting URL to use in Get request
-            String url = "https://v6.exchangerate-api.com/v6/17ac7d3a83e814c245ef9ea9/pair/" + inputObj.curBase +
-                    "/" + inputObj.curTarget;
+        boolean key = true;
 
-            // Create an HttpClient
-            HttpClient client = HttpClient.newHttpClient();
+        // Keep making new currency conversations until user states otherwise
+        while (key) {
+            inputObj.userInputs(); // Captures user-selected currencies for comparison
 
-            // Create a GET request
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI(url))
-                    .GET()
-                    .build();
 
-            // Send the request and get the response
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            // Scratching currencies data
+            try {
+                // Adjusting URL to use in Get request
+                String url = "https://v6.exchangerate-api.com/v6/17ac7d3a83e814c245ef9ea9/pair/" + inputObj.curBase +
+                        "/" + inputObj.curTarget;
 
-            // Get the JSON response string
-            String jsonResponseString = response.body();
+                // Create an HttpClient
+                HttpClient client = HttpClient.newHttpClient();
 
-            // Parse the JSON response
-            JSONObject jsonResponse = new JSONObject(jsonResponseString);
+                // Create a GET request
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(new URI(url))
+                        .GET()
+                        .build();
 
-            // Extract the conversion_rate
-            conversionRate = jsonResponse.getDouble("conversion_rate");
+                // Send the request and get the response
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            System.out.printf("Conversion Rate (%S to %S):  %f\n", inputObj.curBase, inputObj.curTarget, conversionRate);
+                // Get the JSON response string
+                String jsonResponseString = response.body();
 
-            // Exception handling
-        } catch (Exception e) {
-            e.printStackTrace();
+                // Parse the JSON response
+                JSONObject jsonResponse = new JSONObject(jsonResponseString);
+
+                // Extract the conversion_rate
+                conversionRate = jsonResponse.getDouble("conversion_rate");
+
+                System.out.printf("Conversion Rate (%S to %S):  %f\n", inputObj.curBase, inputObj.curTarget, conversionRate);
+
+                // Exception handling
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            double result = CurrencyConverter.myCalc(inputObj.quantBase, conversionRate);
+
+            System.out.printf("%g %S =====> %g %S\n", inputObj.quantBase, inputObj.curBase, result, inputObj.curTarget);
+
+            System.out.println("\n\nDo you want to make another calculation or exit the program?\n" +
+                    "(1) - New calculation\t\t(0) - Exit");
+
+            // Creating object to accept user input
+            Scanner newScanner = new Scanner(System.in);
+            String nextProcess = newScanner.nextLine();
+
+            // If user wants to exit
+            if (nextProcess.equals("0")) {
+                key = false;
+            }
         }
 
-        double result = CurrencyConverter.myCalc(inputObj.quantBase, conversionRate);
-
-        System.out.printf("%g %S =====> %g %S\n", inputObj.quantBase, inputObj.curBase, result, inputObj.curTarget);
+        // Farewell message
+        System.out.println("\n¨¨¨¨¨¨¨¨                               <|>                                          ¨¨¨¨¨¨¨¨\n" +
+                             "Thanks for using our Currency Converter! May your investments grow and your wallet stay fat.\n" +
+                              "¨¨¨¨¨¨¨¨                               <|>                                          ¨¨¨¨¨¨¨¨");
     }
 }
 
