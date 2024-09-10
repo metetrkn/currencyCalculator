@@ -1,10 +1,6 @@
 package se.meteTurkan.calcBody;
 
 import java.util.Scanner; // Allows user to input
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -34,21 +30,30 @@ class Welcomer {
 
 // User currencies input
 class InputCurrency {
-    String curBase; // Declaring base currency for compare
-    String curTarget; // Declaring target currency for compare
-
+    String curBase; String curTarget;
+    double quantBase; double quantTarget;
     public void userInputs() {
         Scanner myScanner = new Scanner(System.in); // Scanner object to get input
 
         boolean key = true; // Key to check if user satisfied with input
         do {
-            // Base currency
+            // Base currency type
             System.out.print("Please input the base currency\t:");
             curBase = myScanner.nextLine().toUpperCase();; // User inputSystem.out.print("Please input the base currency\t:");
+
+            // Base currency quantity
+            System.out.printf("How much %S\t:", curBase);
+            quantBase = myScanner.nextDouble(); // User inputSystem.out.print("Please input the base currency\t:");
+            myScanner.nextLine(); // Consume the leftover newline
 
             // Target currency
             System.out.print("Please input the target currency\t:");
             curTarget = myScanner.nextLine().toUpperCase();; // User input
+
+            // Target currency quantity
+            System.out.printf("How much %S\t:", curTarget);
+            quantTarget = myScanner.nextDouble(); // User inputSystem.out.print("Please input the base currency\t:");
+            myScanner.nextLine(); // Consume the leftover newline
 
             // User input feedbacks
             System.out.println("\nYou have inputed \"" + curBase + "\" as base currency and \"" + curTarget + "\" as target currency");
@@ -104,7 +109,7 @@ public class Calculator {
             // Extract the conversion_rate
             double conversionRate = jsonResponse.getDouble("conversion_rate");
 
-            System.out.println("Conversion Rate (USD to TRY):  " + conversionRate);
+            System.out.printf("Conversion Rate (%S to %S):  %f", inputObj.curBase, inputObj.curTarget, conversionRate);
 
             // Exception handling
         } catch (Exception e) {
@@ -116,10 +121,4 @@ public class Calculator {
        ;
     }
 }
-
-/**
- *
- *
- *
- */
 
