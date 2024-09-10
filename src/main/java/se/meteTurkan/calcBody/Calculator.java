@@ -31,7 +31,8 @@ class Welcomer {
 // User currencies input
 class InputCurrency {
     String curBase; String curTarget;
-    double quantBase; double quantTarget;
+    double quantBase;
+
     public void userInputs() {
         Scanner myScanner = new Scanner(System.in); // Scanner object to get input
 
@@ -50,11 +51,6 @@ class InputCurrency {
             System.out.print("Please input the target currency\t:");
             curTarget = myScanner.nextLine().toUpperCase();; // User input
 
-            // Target currency quantity
-            System.out.printf("How much %S\t:", curTarget);
-            quantTarget = myScanner.nextDouble(); // User inputSystem.out.print("Please input the base currency\t:");
-            myScanner.nextLine(); // Consume the leftover newline
-
             // User input feedbacks
             System.out.println("\nYou have inputed \"" + curBase + "\" as base currency and \"" + curTarget + "\" as target currency");
             System.out.println("Are you satisfied with currencies choose? \n1- (To accept)\t0- (To Retry)");
@@ -72,6 +68,12 @@ class InputCurrency {
 }
 
 
+class CurrencyConverter {
+    static double myCalc (double baseAmount , double ratio) {
+        return baseAmount * ratio;
+    }
+}
+
 public class Calculator {
     public static void main(String[] args) {
         Welcomer.welcoming(); // Prints out welcoming message
@@ -80,7 +82,7 @@ public class Calculator {
 
         inputObj.userInputs(); // Captures user-selected currencies for comparison
 
-
+        double conversionRate = 0.0; // Initializing ratio variable between 2 currencies as default set to 0
 
         // Scratching currencies data
         try {
@@ -107,18 +109,18 @@ public class Calculator {
             JSONObject jsonResponse = new JSONObject(jsonResponseString);
 
             // Extract the conversion_rate
-            double conversionRate = jsonResponse.getDouble("conversion_rate");
+            conversionRate = jsonResponse.getDouble("conversion_rate");
 
-            System.out.printf("Conversion Rate (%S to %S):  %f", inputObj.curBase, inputObj.curTarget, conversionRate);
+            System.out.printf("Conversion Rate (%S to %S):  %f\n", inputObj.curBase, inputObj.curTarget, conversionRate);
 
             // Exception handling
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        double result = CurrencyConverter.myCalc(inputObj.quantBase, conversionRate);
 
-
-       ;
+        System.out.printf("%g %S =====> %g %S\n", inputObj.quantBase, inputObj.curBase, result, inputObj.curTarget);
     }
 }
 
