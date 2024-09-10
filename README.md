@@ -72,7 +72,7 @@ Do you want to make another calculation or exit the program?
 Feel free to open issues or submit pull requests if you have suggestions or improvements.
 
 ## License
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contact
-For any questions or feedback, please reach out to [your email address].
+For any questions or feedback, please reach out to metetrkn52@gmail.com.
